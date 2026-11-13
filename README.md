@@ -85,3 +85,8 @@ make requirements   # uv sync
 ```
 
 En Positron, elegir el intérprete **uv: caf_input_cci_preparatoria** como kernel.
+
+Para instalar Codex y conectarlo con Azure OpenAI de CAF, ver el manual
+[`Manual_Codex_Azure_CAF.txt.rtf`](docs/Manual_Codex_Azure_CAF.txt.rtf).
+Esa configuración es solo para Codex: los notebooks que llaman a la API leen su propio `.env`
+en la raíz del proyecto (ver arriba las variables `AZUREOPENAI_*`).
