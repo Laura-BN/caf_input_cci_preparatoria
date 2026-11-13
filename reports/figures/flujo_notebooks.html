@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flujo de notebooks Input CCI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Una columna: diagrama vertical del flujo y, debajo, la tabla de cada notebook. */
+  :root {
+    --fondo: #fbfbfd;
+    --tinta: #1d1d2b;
+    --suave: #5d5d72;
+    --linea: #8a8a99;
+    --borde: #d9d9e3;
+    --caja: #f4f4f8;
+    --nb: #ececfb;
+    --nb-borde: #6b66c9;
+    --nb-tinta: #3b3591;
+    --azure: #e2f4ec;
+    --azure-borde: #2f8a63;
+    --azure-tinta: #1d6447;
+    --final: #fff4dc;
+    --final-borde: #c28a1c;
+    --display: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --fondo: #15151d;
+      --tinta: #ececf4;
+      --suave: #a9a9bd;
+      --linea: #8d8da3;
+      --borde: #34344a;
+      --caja: #1e1e2a;
+      --nb: #25234a;
+      --nb-borde: #8f8aea;
+      --nb-tinta: #c9c6ff;
+      --azure: #15372a;
+      --azure-borde: #4cbf8e;
+      --azure-tinta: #9ee6c4;
+      --final: #3a2e12;
+      --final-borde: #e0ad45;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --fondo: #15151d;
+    --tinta: #ececf4;
+    --suave: #a9a9bd;
+    --linea: #8d8da3;
+    --borde: #34344a;
+    --caja: #1e1e2a;
+    --nb: #25234a;
+    --nb-borde: #8f8aea;
+    --nb-tinta: #c9c6ff;
+    --azure: #15372a;
+    --azure-borde: #4cbf8e;
+    --azure-tinta: #9ee6c4;
+    --final: #3a2e12;
+    --final-borde: #e0ad45;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--fondo);
+    color: var(--tinta);
+    font: 400 16px/1.55 var(--display);
+  }
+  main {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 40px 20px 64px;
+    display: grid;
+    gap: 36px;
+  }
+  main > * { min-width: 0; }
+  header { display: grid; gap: 8px; max-width: 68ch; }
+  h1 { margin: 0; font-size: 28px; font-weight: 600; text-wrap: balance; }
+  h2 { margin: 0 0 12px; font-size: 19px; font-weight: 600; text-wrap: balance; }
+  p { margin: 0; color: var(--suave); }
+  code, .mono { font-family: var(--mono); font-size: 0.86em; }
+
+  figure { margin: 0; overflow-x: auto; }
+  figure svg { display: block; width: 100%; min-width: 640px; height: auto; margin: 0 auto; max-width: 1000px; }
+  figcaption { margin-top: 10px; font-size: 14px; color: var(--suave); max-width: 72ch; }
+
+  .caja { fill: var(--caja); stroke: var(--borde); stroke-width: 1.2; }
+  .nb { fill: var(--nb); stroke: var(--nb-borde); stroke-width: 1.4; }
+  .azure { fill: var(--azure); stroke: var(--azure-borde); stroke-width: 1.4; }
+  .final { fill: var(--final); stroke: var(--final-borde); stroke-width: 1.6; }
+  .flujo { stroke: var(--linea); stroke-width: 1.6; fill: none; }
+  .flujo-azure { stroke: var(--azure-borde); stroke-width: 1.6; fill: none; }
+  .corchete { stroke: var(--nb-borde); stroke-width: 1.6; fill: none; stroke-dasharray: 6 5; }
+  .punta { fill: var(--linea); }
+  .punta-azure { fill: var(--azure-borde); }
+  .t-titulo { fill: var(--tinta); font: 600 15px var(--display); }
+  .t-nb { fill: var(--nb-tinta); font: 600 15px var(--display); }
+  .t-nb-sub { fill: var(--nb-tinta); font: 400 12.5px var(--display); }
+  .t-archivo { fill: var(--tinta); font: 500 13.5px var(--mono); }
+  .t-archivo-chico { fill: var(--tinta); font: 500 12px var(--mono); }
+  .t-sub { fill: var(--suave); font: 400 11.5px var(--display); }
+  .t-azure { fill: var(--azure-tinta); font: 600 15px var(--display); }
+  .t-azure-sub { fill: var(--azure-tinta); font: 400 12px var(--display); }
+  .t-etiqueta { fill: var(--azure-tinta); font: 500 11px var(--display); }
+  .t-corchete { fill: var(--nb-tinta); font: 600 12.5px var(--display); }
+
+  .tabla { overflow-x: auto; border: 1px solid var(--borde); border-radius: 10px; }
+  table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--borde); }
+  th { font-weight: 600; font-size: 13px; color: var(--suave); background: var(--caja); }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child { white-space: nowrap; font-weight: 600; color: var(--nb-tinta); }
+  td .mono { color: var(--tinta); }
+  .azure-chip {
+    display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px;
+    font-size: 12px; font-weight: 500; color: var(--azure-tinta);
+    background: var(--azure); border: 1px solid var(--azure-borde);
+  }
+
+  ul.notas { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 72ch; color: var(--suave); }
+  ul.notas strong { color: var(--tinta); font-weight: 600; }
+
+  @media (max-width: 480px) {
+    main { padding: 28px 16px 48px; gap: 28px; }
+    h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Flujo de notebooks del Input CCI</h1>
+    <p>Paso 2 del flujo de trabajo, <strong>IDOs - Input CCI</strong>: del Word del IDO al Excel del Input CCI, en cinco pasos encadenados: cada notebook lee la tabla del anterior y le agrega sus columnas. El <code>02.00</code> los ejecuta todos en orden.</p>
+  </header>
+
+  <figure>
+    <svg viewBox="0 0 1000 916" role="img" aria-label="Flujo de los notebooks: el Word del IDO pasa por 02.01 a 02.05, cada uno genera una tabla que lee el siguiente; 02.02, 02.03 y 02.04 llaman a Azure solo para IDOs nuevos; 02.03 usa el Protocolo de evidencia y 02.04 el Input CCI histórico; 02.05 genera 2. Input CCI.xlsx; 02.00 ejecuta todo y anota el histórico de ejecuciones.">
+      <defs>
+        <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" class="punta"></path>
+        </marker>
+        <marker id="flecha-azure" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" class="punta-azure"></path>
+        </marker>
+      </defs>
+
+      <!-- Entrada: Word -->
+      <rect class="caja" x="370" y="16" width="260" height="52" rx="10"></rect>
+      <text class="t-titulo" x="500" y="38" text-anchor="middle">IDOs en Word (.docx)</text>
+      <text class="t-sub" x="500" y="56" text-anchor="middle">data/raw/2. IDOs - Input CCI/</text>
+      <line class="flujo" x1="500" y1="68" x2="500" y2="98" marker-end="url(#flecha)"></line>
+
+      <!-- 02.01 -->
+      <rect class="nb" x="320" y="100" width="360" height="60" rx="10"></rect>
+      <text class="t-nb" x="500" y="124" text-anchor="middle">02.01 · Extracción de texto</text>
+      <text class="t-nb-sub" x="500" y="146" text-anchor="middle">Extrae ficha, montos y 5 secciones · sin API</text>
+      <line class="flujo" x1="500" y1="160" x2="500" y2="186" marker-end="url(#flecha)"></line>
+      <rect class="caja" x="370" y="188" width="260" height="48" rx="8"></rect>
+      <text class="t-archivo" x="500" y="208" text-anchor="middle">idos.csv</text>
+      <text class="t-sub" x="500" y="226" text-anchor="middle">02.01_extraccion_idos · 20 columnas</text>
+      <line class="flujo" x1="500" y1="236" x2="500" y2="262" marker-end="url(#flecha)"></line>
+
+      <!-- 02.02 -->
+      <rect class="nb" x="320" y="264" width="360" height="60" rx="10"></rect>
+      <text class="t-nb" x="500" y="288" text-anchor="middle">02.02 · Redacción de textos</text>
+      <text class="t-nb-sub" x="500" y="310" text-anchor="middle">Redacta sector, objetivo, pertinencia e intervención</text>
+      <line class="flujo" x1="500" y1="324" x2="500" y2="350" marker-end="url(#flecha)"></line>
+      <rect class="caja" x="370" y="352" width="260" height="48" rx="8"></rect>
+      <text class="t-archivo" x="500" y="372" text-anchor="middle">idos_redaccion.csv</text>
+      <text class="t-sub" x="500" y="390" text-anchor="middle">02.02_redaccion_idos · 29 columnas</text>
+      <line class="flujo" x1="500" y1="400" x2="500" y2="426" marker-end="url(#flecha)"></line>
+
+      <!-- 02.03 -->
+      <rect class="nb" x="320" y="428" width="360" height="60" rx="10"></rect>
+      <text class="t-nb" x="500" y="452" text-anchor="middle">02.03 · Evidencia del repositorio</text>
+      <text class="t-nb-sub" x="500" y="474" text-anchor="middle">Elige estudios y redacta evidencia y factores</text>
+      <line class="flujo" x1="500" y1="488" x2="500" y2="514" marker-end="url(#flecha)"></line>
+      <rect class="caja" x="370" y="516" width="260" height="48" rx="8"></rect>
+      <text class="t-archivo" x="500" y="536" text-anchor="middle">idos_evidencia.csv</text>
+      <text class="t-sub" x="500" y="554" text-anchor="middle">02.03_evidencia_repositorio · 39 columnas</text>
+      <line class="flujo" x1="500" y1="564" x2="500" y2="590" marker-end="url(#flecha)"></line>
+
+      <!-- 02.04 -->
+      <rect class="nb" x="320" y="592" width="360" height="60" rx="10"></rect>
+      <text class="t-nb" x="500" y="616" text-anchor="middle">02.04 · Concepto de priorización</text>
+      <text class="t-nb-sub" x="500" y="638" text-anchor="middle">Sugiere decisión Sí/No y redacta el concepto</text>
+      <line class="flujo" x1="500" y1="652" x2="500" y2="678" marker-end="url(#flecha)"></line>
+      <rect class="caja" x="370" y="680" width="260" height="48" rx="8"></rect>
+      <text class="t-archivo" x="500" y="700" text-anchor="middle">idos_concepto.csv</text>
+      <text class="t-sub" x="500" y="718" text-anchor="middle">02.04_concepto_priorizacion · 49 columnas</text>
+      <line class="flujo" x1="500" y1="728" x2="500" y2="754" marker-end="url(#flecha)"></line>
+
+      <!-- 02.05 -->
+      <rect class="nb" x="320" y="756" width="360" height="60" rx="10"></rect>
+      <text class="t-nb" x="500" y="780" text-anchor="middle">02.05 · Excel del Input CCI</text>
+      <text class="t-nb-sub" x="500" y="802" text-anchor="middle">Arma el Excel con desplegables y Revisar · sin API</text>
+      <line class="flujo" x1="500" y1="816" x2="500" y2="842" marker-end="url(#flecha)"></line>
+      <rect class="final" x="360" y="844" width="280" height="56" rx="10"></rect>
+      <text class="t-archivo" x="500" y="867" text-anchor="middle">2. Input CCI.xlsx</text>
+      <text class="t-sub" x="500" y="887" text-anchor="middle">data/processed · 27 columnas</text>
+
+      <!-- Azure -->
+      <rect class="azure" x="750" y="264" width="220" height="388" rx="12"></rect>
+      <text class="t-azure" x="860" y="440" text-anchor="middle">Azure AI Foundry</text>
+      <text class="t-azure-sub" x="860" y="462" text-anchor="middle">respuesta estructurada</text>
+      <text class="t-azure-sub" x="860" y="480" text-anchor="middle">con reglas de redacción</text>
+      <text class="t-azure-sub" x="860" y="604" text-anchor="middle">Un IDO que no cambió</text>
+      <text class="t-azure-sub" x="860" y="622" text-anchor="middle">sale del caché, sin llamar</text>
+      <line class="flujo-azure" x1="682" y1="294" x2="748" y2="294" marker-start="url(#flecha-azure)" marker-end="url(#flecha-azure)"></line>
+      <line class="flujo-azure" x1="682" y1="458" x2="748" y2="458" marker-start="url(#flecha-azure)" marker-end="url(#flecha-azure)"></line>
+      <line class="flujo-azure" x1="682" y1="622" x2="748" y2="622" marker-start="url(#flecha-azure)" marker-end="url(#flecha-azure)"></line>
+      <text class="t-etiqueta" x="715" y="286" text-anchor="middle">IDOs nuevos</text>
+      <text class="t-etiqueta" x="715" y="450" text-anchor="middle">IDOs nuevos</text>
+      <text class="t-etiqueta" x="715" y="614" text-anchor="middle">IDOs nuevos</text>
+
+      <!-- Insumos propios de 02.03 y 02.04 -->
+      <rect class="caja" x="70" y="428" width="220" height="60" rx="10"></rect>
+      <text class="t-titulo" x="180" y="452" text-anchor="middle">Protocolo de evidencia</text>
+      <text class="t-sub" x="180" y="472" text-anchor="middle">hoja (2) Repositorio evidencia</text>
+      <line class="flujo" x1="290" y1="458" x2="318" y2="458" marker-end="url(#flecha)"></line>
+
+      <rect class="caja" x="70" y="592" width="220" height="60" rx="10"></rect>
+      <text class="t-titulo" x="180" y="616" text-anchor="middle">Input CCI histórico</text>
+      <text class="t-sub" x="180" y="636" text-anchor="middle">conceptos como ejemplo de estilo</text>
+      <line class="flujo" x1="290" y1="622" x2="318" y2="622" marker-end="url(#flecha)"></line>
+
+      <!-- 02.00 -->
+      <path class="corchete" d="M60,100 L44,100 L44,816 L60,816"></path>
+      <text class="t-corchete" transform="translate(32 458) rotate(-90)" text-anchor="middle">02.00 · ejecuta 02.01 → 02.05 en orden</text>
+      <path class="corchete" d="M44,816 L44,872 L66,872"></path>
+      <path d="M60,867 L70,872 L60,877 z" class="punta"></path>
+      <rect class="caja" x="70" y="844" width="220" height="56" rx="10"></rect>
+      <text class="t-titulo" x="180" y="867" text-anchor="middle">Histórico de ejecuciones</text>
+      <text class="t-sub" x="180" y="887" text-anchor="middle">reports · IDOs nuevos y tokens</text>
+    </svg>
+    <figcaption>Cada notebook lee solo la tabla del anterior, que ya trae todo lo previo, y le agrega sus columnas. Los tres notebooks en verde llaman a Azure únicamente para los IDOs nuevos o modificados.</figcaption>
+  </figure>
+
+  <section>
+    <h2>Qué hace cada notebook</h2>
+    <div class="tabla">
+      <table>
+        <thead>
+          <tr><th>Notebook</th><th>Qué hace</th><th>Lee</th><th>Genera</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>02.00</td>
+            <td>Ejecuta 02.01 a 02.05 en orden y se detiene en el primer fallo.</td>
+            <td>Los cinco notebooks</td>
+            <td>Resumen en pantalla y una fila por notebook en <span class="mono">reports/2. IDOs - Input CCI_historico_ejecuciones.xlsx</span></td>
+          </tr>
+          <tr>
+            <td>02.01</td>
+            <td>Extrae de cada Word la ficha técnica, los montos, el financiamiento verde y cinco secciones. Sin API.</td>
+            <td><span class="mono">data/raw/2. IDOs - Input CCI/</span></td>
+            <td><span class="mono">idos.csv</span> · 20 columnas</td>
+          </tr>
+          <tr>
+            <td>02.02<span class="azure-chip">Azure</span></td>
+            <td>Redacta gran sector, objetivo, pertinencia + antecedentes e intervención, con citas para revisar.</td>
+            <td><span class="mono">idos.csv</span></td>
+            <td><span class="mono">idos_redaccion.csv</span> · 29 columnas</td>
+          </tr>
+          <tr>
+            <td>02.03<span class="azure-chip">Azure</span></td>
+            <td>Toma los estudios candidatos del sector, elige de 1 a 3 y redacta evidencia y factores para maximizar el impacto; verifica las citas.</td>
+            <td><span class="mono">idos_redaccion.csv</span> y <span class="mono">1. Protocolo de evidencia.xlsx</span></td>
+            <td><span class="mono">idos_evidencia.csv</span> · 39 columnas</td>
+          </tr>
+          <tr>
+            <td>02.04<span class="azure-chip">Azure</span></td>
+            <td>Sugiere la decisión de priorización (Sí/No) y redacta el concepto para evaluación; ambos se validan.</td>
+            <td><span class="mono">idos_evidencia.csv</span> y <span class="mono">Libros excel/Input CCI.xlsx</span></td>
+            <td><span class="mono">idos_concepto.csv</span> · 49 columnas</td>
+          </tr>
+          <tr>
+            <td>02.05</td>
+            <td>Arma el Input CCI con listas desplegables y la columna Revisar con las alertas. Sin API.</td>
+            <td><span class="mono">idos_concepto.csv</span></td>
+            <td><span class="mono">data/processed/2. Input CCI.xlsx</span> · 27 columnas</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Para tener en cuenta</h2>
+    <ul class="notas">
+      <li><strong>Un IDO nuevo</strong> se agrega poniendo el Word en <span class="mono">data/raw/2. IDOs - Input CCI/</span> y corriendo el 02.00: solo ese IDO pasa por Azure.</li>
+      <li><strong>Las tablas intermedias</strong> viven en <span class="mono">data/interim/</span>, en una carpeta con el número del notebook que las genera.</li>
+      <li><strong>2. Input CCI.xlsx se regenera completo</strong> en cada corrida: lo que se llene a mano debe copiarse al Input CCI de trabajo.</li>
+      <li><strong>Los textos de Azure son borradores</strong> y la columna Revisar señala qué validar en cada IDO.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

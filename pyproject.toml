@@ -1,0 +1,45 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "caf_input_cci_preparatoria"
+version = "0.0.1"
+description = "Extracción del texto de los IDOs y redacción asistida por LLM del Input CCI."
+authors = [
+  { name = "DADMI" },
+]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "ipykernel",
+    "langchain-core",
+    "langchain-openai",
+    "nbclient",
+    "nbformat",
+    "openpyxl",
+    "pandas",
+    "pydantic",
+    "pymupdf>=2.1",
+    "pypdf",
+    "python-docx>=1.2.0",
+    "python-dotenv",
+    "python-pptx",
+    "ruff",
+]
+requires-python = "~=3.14.0"
+
+
+[tool.ruff]
+line-length = 99
+src = ["caf_input_cci_preparatoria"]
+include = ["pyproject.toml", "caf_input_cci_preparatoria/**/*.py"]
+
+[tool.ruff.lint]
+extend-select = ["I"]  # Add import sorting
+
+[tool.ruff.lint.isort]
+known-first-party = ["caf_input_cci_preparatoria"]
+force-sort-within-sections = true

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Flujo paso 2</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 1920px; height: 1080px; background: #efeff1; font-family: "Avenir Next", "Helvetica Neue", Arial, sans-serif; color: #1d1d1f; position: relative; overflow: hidden; }
+  .abs { position: absolute; }
+  .azul { color: #1f5bc4; font-weight: 600; }
+  .titulo { left: 0; top: 0; width: 1920px; height: 134px; background: #fff; }
+  .titulo h1 { position: absolute; left: 30px; top: 40px; font-size: 52px; font-weight: 400; color: #4a4560; }
+  .progreso { left: 1036px; top: 40px; width: 404px; height: 50px; background: #b6d3d8; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+  .entrada { background: #f6f6f7; border: 1.5px solid #c9c9cf; border-radius: 10px; text-align: center; font-size: 22px; line-height: 1.3; display: flex; flex-direction: column; justify-content: center; }
+  .entrada span { font-size: 19px; color: #3d3d44; }
+  .entrada .azul { color: #1f5bc4; }
+  .cabeza { background: #6f7e99; color: #fff; border-radius: 4px; font-size: 27px; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; line-height: 1.2; padding: 0 12px; }
+  .tarjeta { background: #fff; border-radius: 22px; padding: 24px 16px 16px; text-align: center; font-size: 22px; line-height: 1.32; display: flex; flex-direction: column; justify-content: space-between; }
+  .gris { color: #77777f; }
+  .archivo { background: #e9edf5; border-radius: 10px; padding: 12px 8px; font-size: 21px; line-height: 1.32; color: #3d3d44; }
+  .archivo i { color: #6c6c74; }
+  .chico { font-size: 19px; }
+  .flecha { color: #6f7e99; font-size: 34px; line-height: 1; text-align: center; }
+  .azure { background: #bfe3c9; font-size: 26px; display: flex; align-items: center; justify-content: center; }
+  .roja { background: #b3261e; width: 3px; }
+  .barra { background: #6f7e99; color: #fff; font-size: 27px; font-weight: 600; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
+  .panel { background: #fff; border-radius: 16px; }
+  ol { position: absolute; left: 30px; top: 10px; width: 1430px; font-size: 21.5px; line-height: 1.37; padding-left: 26px; }
+  ol li { padding-left: 6px; }
+</style>
+</head>
+<body>
+<div class="abs titulo"><h1>2. IDOs - Input CCI</h1></div>
+<div class="abs progreso">100%</div>
+
+<!-- Entradas -->
+<div class="abs entrada" style="left:51px; top:155px; width:323px; height:96px;"><span class="azul" style="font-size:22px;">IDOs en Word (.docx)</span><span>data/raw/2. IDOs - Input CCI</span></div>
+<div class="abs entrada" style="left:791px; top:155px; width:323px; height:96px;"><span class="azul" style="font-size:22px;">Protocolo de evidencia (.xlsx)</span><span>repositorio de estudios</span></div>
+<div class="abs entrada" style="left:1161px; top:155px; width:323px; height:96px;"><span class="azul" style="font-size:22px;">Input CCI histórico (.xlsx)</span><span>conceptos como ejemplo de estilo</span></div>
+<div class="abs flecha" style="left:198px; top:255px; width:30px;">↓</div>
+<div class="abs flecha" style="left:938px; top:255px; width:30px;">↓</div>
+<div class="abs flecha" style="left:1308px; top:255px; width:30px;">↓</div>
+
+<!-- Cabezas -->
+<div class="abs cabeza" style="left:51px; top:294px; width:323px; height:74px;">02.01 Extracción texto IDOs</div>
+<div class="abs cabeza" style="left:421px; top:294px; width:323px; height:74px;">02.02 Redacción textos</div>
+<div class="abs cabeza" style="left:791px; top:294px; width:323px; height:74px;">02.03 Evidencia repositorio</div>
+<div class="abs cabeza" style="left:1161px; top:294px; width:323px; height:74px;">02.04 Concepto priorización</div>
+<div class="abs cabeza" style="left:1531px; top:294px; width:323px; height:74px;">02.05 Excel Input CCI</div>
+
+<!-- Tarjetas -->
+<div class="abs tarjeta" style="left:51px; top:380px; width:323px; height:342px;">
+  <div>Extrae ficha, montos y 5 secciones del Word</div>
+  <div class="archivo">Genera<br><span class="azul">idos.csv</span><br>23 columnas <i>(incluye cols uso paso 3)</i></div>
+</div>
+<div class="abs tarjeta" style="left:421px; top:380px; width:323px; height:342px;">
+  <div>Redacta gran sector, objetivo, pertinencia e intervención <span class="gris">(+cols control)</span></div>
+  <div class="archivo">Genera<br><span class="azul">idos_redaccion.csv</span><br>(+9) 32 columnas</div>
+</div>
+<div class="abs tarjeta" style="left:791px; top:380px; width:323px; height:342px;">
+  <div>Elige estudios del repositorio y redacta evidencia y factores <span class="gris">(+cols control)</span></div>
+  <div class="archivo">Genera<br><span class="azul">idos_evidencia.csv</span><br>(+10) 42 columnas</div>
+</div>
+<div class="abs tarjeta" style="left:1161px; top:380px; width:323px; height:342px;">
+  <div>Sugiere decisión Sí/No y redacta el concepto de priorización <span class="gris">(+cols control)</span></div>
+  <div class="archivo">Genera:<br><span class="azul">idos_concepto.csv</span><br>(+10, +4) 56 columnas <i>(uso en pasos 3 y 4)</i><br><span class="azul">conceptos_aprobados.csv</span><br><span class="chico">lo crea si no existe y lo lee, 8 cols</span></div>
+</div>
+<div class="abs tarjeta" style="left:1531px; top:380px; width:323px; height:342px;">
+  <div>Arma el Input CCI con decisión y concepto finales, ordenado por Fecha IDO</div>
+  <div class="archivo">Genera<br><span class="azul">2. Input CCI.xlsx</span><br>27 columnas</div>
+</div>
+
+<!-- Flechas entre tarjetas -->
+<div class="abs flecha" style="left:378px; top:540px; width:38px;">→</div>
+<div class="abs flecha" style="left:748px; top:540px; width:38px;">→</div>
+<div class="abs flecha" style="left:1118px; top:540px; width:38px;">→</div>
+<div class="abs flecha" style="left:1488px; top:540px; width:38px;">→</div>
+
+<!-- Azure -->
+<div class="abs flecha" style="left:568px; top:712px; width:30px;">↕</div>
+<div class="abs flecha" style="left:938px; top:712px; width:30px;">↕</div>
+<div class="abs flecha" style="left:1308px; top:712px; width:30px;">↕</div>
+<div class="abs azure" style="left:421px; top:746px; width:1063px; height:48px;"><span>Usan <b>Azure</b>, solo IDOs nuevos o modificados; el resto sale del caché</span></div>
+
+<!-- 02.00 -->
+<div class="abs barra" style="left:51px; top:812px; width:1803px; height:42px;">02.00 Ejecutar todo</div>
+<div class="abs panel" style="left:51px; top:866px; width:1803px; height:184px;">
+  <ol>
+    <li><b>Corre 02.01 → 02.04 en orden</b>; se detiene si algo falla. El 02.04 marca como “Pendiente” los IDOs en <span class="azul">idos_concepto.csv</span> que no están en <span class="azul">conceptos_aprobados.csv</span> (nuevos o modificados).</li>
+    <li><b>Aprobación del concepto de EI (solo IDOs pendientes):</b> el 02.00 lee idos_concepto.csv y, por cada IDO “Pendiente”, muestra el concepto de Azure y pregunta si se aprueba (A) o se edita en TextEdit (E).</li>
+    <li><b>El 02.00 guarda el concepto final</b> en <span class="azul">conceptos_aprobados.csv</span> (registro, 8 columnas) y en <span class="azul">idos_concepto.csv</span> (decisión y concepto finales).</li>
+    <li><b>Corre 02.05</b> y anota en el histórico la duración de cada notebook, los IDOs nuevos, las llamadas a Azure y los tokens.</li>
+  </ol>
+  <div class="abs archivo" style="left:1498px; top:10px; width:292px; height:164px; display:flex; flex-direction:column; justify-content:center; text-align:center; font-size:20px;">
+    Genera<br><span class="azul">historico_ejecuciones.xlsx</span>12 columnas<br><span class="azul">conceptos_aprobados.csv</span><span class="chico">lo llena cuando se responde A / E, 8 cols</span>
+  </div>
+</div>
+<!-- Flecha roja 02.04 <-> 02.00 (encima de las barras) -->
+<div class="abs roja" style="left:1402px; top:738px; height:62px;"></div>
+<div class="abs" style="left:1395px; top:725px; width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-bottom:14px solid #b3261e;"></div>
+<div class="abs" style="left:1395px; top:798px; width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-top:14px solid #b3261e;"></div>
+</body>
+</html>
