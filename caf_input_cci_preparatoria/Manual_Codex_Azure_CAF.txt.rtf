@@ -1,0 +1,91 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 MANUAL: CONECTAR CODEX CON AZURE OPENAI (CAF)\
+=============================================\
+\
+1. INSTALAR CODEX\
+-----------------\
+En la terminal:\
+\
+    curl -fsSL https://chatgpt.com/codex/install.sh | sh\
+\
+Cierra la terminal, abre una nueva y comprueba con:\
+\
+    codex --version\
+\
+\
+2. CONFIGURAR AZURE\
+-------------------\
+- Codex guarda su configuraci\'f3n en una carpeta OCULTA: /Users/k/.codex/\
+  En Finder se ve con Cmd + Shift + . (punto) (en Mac)\
+- Abre (o crea) el archivo config.toml dentro de esa carpeta y pon al inicio:\
+\
+    model = "gpt-6-astra-dadmi"\
+    model_provider = "azure"\
+    model_reasoning_effort = "xhigh"\
+\
+    [model_providers.azure]\
+    name = "Azure OpenAI"\
+    base_url = "https://aprendecaf.cognitiveservices.azure.com/openai/v1"\
+    env_key = "AZURE_OPENAI_API_KEY"\
+    wire_api = "responses"\
+\
+- No copies tal cual el config.toml de otra persona: trae rutas de su computador.\
+\
+\
+3. GUARDAR LA CLAVE\
+-------------------\
+- En la misma carpeta ~/.codex/ crea un archivo llamado .env con esta \'fanica l\'ednea:\
+\
+    AZURE_OPENAI_API_KEY=tu_clave_de_azure\
+\
+- La clave de Azure NO es de OpenAI (no empieza con sk-). Por eso no sirve en la\
+  opci\'f3n "Provide your own API key" del inicio de sesi\'f3n de Codex.\
+\
+\
+4. ABRIR CODEX\
+--------------\
+En una terminal nueva, dentro de la carpeta del proyecto:\
+\
+    codex\
+\
+La primera vez pregunta si conf\'edas en la carpeta: elige "Trust and continue".\
+\
+\
+ES UNA CONFIGURACI\'d3N GLOBAL\
+---------------------------\
+config.toml y .env de ~/.codex/ sirven para TODOS los proyectos. En un proyecto\
+nuevo no hay que volver a poner la clave; solo aceptar "Trust and continue".\
+\
+Ojo: esto es solo para Codex. Si un notebook o script de Python llama a la API,\
+ese proyecto necesita su propio .env (incluido en .gitignore) y load_dotenv().\
+\
+\
+SI ALGO FALLA\
+-------------\
+- "401 Unauthorized"\
+    Se peg\'f3 la clave de Azure en el login de OpenAI.\
+    Ejecuta: codex logout   y repitir los pasos 2 y 3.\
+\
+- "Missing environment variable"\
+    Revisa el paso 3, sal de Codex con /quit y REINICIA EL MAC\
+    (para que el servicio de Codex que corre en segundo plano cargue la clave).\
+\
+- "command not found: ..."\
+    Escribiste una pregunta en la terminal normal. Primero ejecuta: codex\
+\
+\
+RECORDATORIOS\
+-------------\
+- En la terminal (%) van los comandos: codex, git, etc.\
+  Dentro de Codex van las preguntas en espa\'f1ol.\
+- Nunca pegues la clave en el chat de Codex ni la muestres en capturas.\
+- El .env del proyecto debe estar en .gitignore. Verif\'edcalo con:\
+      git check-ignore -v .env\
+- Para salir de Codex: /quit\
+}
